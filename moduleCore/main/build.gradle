@@ -1,0 +1,65 @@
+def dep = rootProject.ext
+
+if (dep.isDebug) {
+    appPlugins.each { k, v -> apply plugin: v }
+} else {
+    libPlugins.each { k, v -> apply plugin: v }
+}
+
+android {
+    compileSdkVersion dep.android.compileSdkVersion
+    buildToolsVersion dep.android.buildToolsVersion
+    defaultConfig {
+        if (dep.isDebug) {
+            applicationId dep.applicationId.main
+        }
+        minSdkVersion dep.android.minSdkVersion
+        targetSdkVersion dep.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // Expected @AndroidEntryPoint to have a value. Did you forget to apply the Gradle Plugin?
+                // 解决：这里要用+=
+                arguments += [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            if (dep.isDebug) {
+                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+    // 支持viewBinding
+    android.buildFeatures.viewBinding = true
+}
+
+dependencies {
+
+    implementation project(':moduleBase:libBase')
+    implementation project(':modulePublic:common')
+
+    commonlib.each { k, v -> implementation v }
+    annotationProcessor.each{k,v ->kapt v}
+
+}

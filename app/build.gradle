@@ -1,0 +1,58 @@
+
+def dep = rootProject.ext
+appPlugins.each { k, v -> apply plugin: v }
+
+android {
+    compileSdkVersion dep.android.compileSdkVersion
+    buildToolsVersion dep.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId dep.applicationId.app
+        minSdkVersion dep.android.minSdkVersion
+        targetSdkVersion dep.android.targetSdkVersion
+        versionCode dep.android.versionCode
+        versionName dep.android.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // Expected @AndroidEntryPoint to have a value. Did you forget to apply the Gradle Plugin?
+                // 解决：这里要用+=
+                arguments += [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation project(':moduleBase:libBase')
+    implementation project(':modulePublic:common')
+
+    if (!dep.isDebug) {
+        implementation project(':moduleCore:main')
+    }
+
+    commonlib.each { k, v -> implementation v }
+    annotationProcessor.each{k,v ->kapt v}
+}

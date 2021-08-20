@@ -1,0 +1,22 @@
+
+1、hilt报错找不到applicationcomponent符号  检查版本号依赖和calssPath版本对应
+2、kapt 不生效 需要先apply kapt插件
+3、在3.x版本的hilt中取消了ApplicationCompone组件用SingleCompone代替
+
+“Dependent features configured but no package ID was set”
+
+检查作为库依赖的Module中是否有因为测试而设置的id 'com.android.application'
+将其改回id 'com.android.library'即可
+
+Aroute引起的反射报错需要每个模块依赖Aroute
+
+网络请求框架啊
+1、NetWorkModule 通过hilt提供Retrofit对象和Okhttp对象
+2、ApiException 统一的Api异常处理
+3、IResponse 请求响应的接口
+4、ICallBack 最终的统一回调接口
+5、RequestModel 统一的请求模块，传入ICallBack 、lifecycleOwner、Observable(ApiServer获取) 对象
+
+androidx-startup完成app统统一初始化
+
+单Activity模式

@@ -1,0 +1,5 @@
+rootProject.name = "MvxApp"
+include ':app'
+include ':moduleCore:main'
+include ':modulePublic:common'
+include ':moduleBase:libBase'

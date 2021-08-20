@@ -1,0 +1,147 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = "1.5.21"
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.2.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+// 使用Hilt需要配置的Gradle插件
+        //classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28-alpha'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.1"//和navigation版本号一致
+        // NOTE: Do not place your application dependencies here; they belong
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+
+    isDebug = false  // 为true时，调试模式，组件可以单独运行。 如果是false，统一编译模式
+    navigation_version = '2.3.1'
+    android = [
+            compileSdkVersion: 30,
+            minSdkVersion    : 21,
+            targetSdkVersion : 30,
+            buildToolsVersion: "30.0.3",
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+
+    applicationId = [
+            "app" : "com.kevin.mvxapp",
+            "main": "com.kevin.main"
+    ]
+
+    //region 插件
+    def appPlugins = [
+            "application": 'com.android.application',
+            "kotlin"     : 'kotlin-android',
+            "kapt"       : 'kotlin-kapt',
+            "extensions" : 'kotlin-android-extensions',
+            "hilt"       : 'dagger.hilt.android.plugin'
+    ]
+    ext.appPlugins = appPlugins
+
+    def libPlugins = [
+            "library": 'com.android.library',
+            "kotlin"     : 'kotlin-android',
+            "kapt"       : 'kotlin-kapt',
+            "extensions" : 'kotlin-android-extensions',
+            "hilt"       : 'dagger.hilt.android.plugin'
+    ]
+    ext.libPlugins = libPlugins
+//endregion
+
+    //region library
+  def library = [
+            "appcompat"       : "androidx.appcompat:appcompat:1.1.0",
+            "material"        : "com.google.android.material:material:1.1.0",
+            "constraintlayout": "androidx.constraintlayout:constraintlayout:1.1.3",
+            "startup"         : "androidx.startup:startup-runtime:1.0.0-alpha01",
+            "libARouter" : "com.alibaba:arouter-api:1.5.1",
+            "libHilt" :  "com.google.dagger:hilt-android:2.38.1",
+            "libOkHttp3" : "com.squareup.okhttp3:okhttp:3.14.+",
+            "libHttpLogging" : "com.squareup.okhttp3:logging-interceptor:3.14.+",
+            "libRetrofit2" : "com.squareup.retrofit2:retrofit:2.9.0",
+            "libRetrofit2Gson" : "com.squareup.retrofit2:converter-gson:2.9.0",
+            "libRetrofit2RxJava" : "com.squareup.retrofit2:adapter-rxjava2:2.9.0",
+            "libRxJavaAndroid" : "io.reactivex.rxjava2:rxandroid:2.0.2",
+
+            "libGlide" : "com.github.bumptech.glide:glide:4.11.0",
+           // "libGlideCompiler" : "com.github.bumptech.glide:compiler:4.11.0",
+
+            "libVolley" : "com.android.volley:volley:1.1.0",
+            "libXUtils" : "org.xutils:xutils:3.3.36",
+
+            "kotlin": "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+            "coreKtx": 'androidx.core:core-ktx:$kotlin_version',
+
+            "navigationUi" :"androidx.navigation:navigation-ui:2.3.1",
+            "navigationUiKtx" :"androidx.navigation:navigation-ui-ktx:2.3.1",
+            "navigationFragment" :"androidx.navigation:navigation-fragment:2.3.1",
+            "navigationFragmentKtx" :"androidx.navigation:navigation-fragment-ktx:2.3.1",
+            "navigationRunTime": "androidx.navigation:navigation-runtime:2.3.1"
+    ]
+    ext.library = library
+
+
+    def commonlib = [
+            "libARouter" : "com.alibaba:arouter-api:1.5.1",
+            "libHilt" : "com.google.dagger:hilt-android:2.38.1",
+    ]
+    ext.commonlib = commonlib
+
+    def annotationProcessor=[
+            "libARouterCompiler" : "com.alibaba:arouter-compiler:1.5.1",
+            "libHiltCompiler" : "com.google.dagger:hilt-android-compiler:2.38.1",
+            "libGlideCompiler" : "com.github.bumptech.glide:compiler:4.11.0"
+    ]
+    ext.annotationProcessor = annotationProcessor
+    //endregion
+
+
+    libOkHttp3 = "com.squareup.okhttp3:okhttp:3.14.+"
+    libHttpLogging = "com.squareup.okhttp3:logging-interceptor:3.14.+"
+    libRetrofit2 = "com.squareup.retrofit2:retrofit:2.9.0"
+    libRetrofit2Gson = "com.squareup.retrofit2:converter-gson:2.9.0"
+    libRetrofit2RxJava = "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    libRxJavaAndroid = "io.reactivex.rxjava2:rxandroid:2.0.2"
+
+    libGlide = "com.github.bumptech.glide:glide:4.11.0"
+    libGlideCompiler = "com.github.bumptech.glide:compiler:4.11.0"
+
+    libVolley = "com.android.volley:volley:1.1.0"
+    libXUtils = "org.xutils:xutils:3.3.36"
+
+    kotlin= "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    coreKtx= 'androidx.core:core-ktx:$kotlin_version'
+
+
+    libARouter = "com.alibaba:arouter-api:1.5.1"
+    libARouterCompiler = "com.alibaba:arouter-compiler:1.5.1"
+    libHilt = "com.google.dagger:hilt-android:2.38.1"
+    libHiltCompiler = "com.google.dagger:hilt-android-compiler:2.38.1"
+
+    navigationUi ="androidx.navigation:navigation-ui:2.3.1"
+    navigationUiKtx ="androidx.navigation:navigation-ui-ktx:2.3.1"
+    navigationFragment ="androidx.navigation:navigation-fragment:2.3.1"
+    navigationFragmentKtx ="androidx.navigation:navigation-fragment-ktx:2.3.1"
+    navigationRunTime= "androidx.navigation:navigation-runtime:2.3.1"
+
+
+
+}

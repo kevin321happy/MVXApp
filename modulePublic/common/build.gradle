@@ -1,0 +1,52 @@
+
+def dep = rootProject.ext
+libPlugins.each { k, v -> apply plugin: v }
+android {
+    compileSdkVersion dep.android.compileSdkVersion
+    buildToolsVersion dep.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion dep.android.minSdkVersion
+        targetSdkVersion dep.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // Expected @AndroidEntryPoint to have a value. Did you forget to apply the Gradle Plugin?
+                // 解决：这里要用+=
+                arguments += [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets', 'src\\assets'
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation project(':moduleBase:libBase')
+
+    commonlib.each { k, v -> implementation v }
+    annotationProcessor.each{k,v ->kapt v}
+
+}
